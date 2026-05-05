@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: syntrack
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --workers 1 --threads 8 --timeout 120 --bind 0.0.0.0:$PORT server:app
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SYNTRACK_DB_PATH
+        value: /var/data/syntrack.db
+    disk:
+      name: syntrack-data
+      mountPath: /var/data
+      sizeGB: 1
